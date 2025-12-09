@@ -1,0 +1,49 @@
+{
+    "problem": "I can't wake up early to go to the gym.",
+    "conversation": [
+        {
+            "speaker": "USER",
+            "text": "I can't wake up early to go to the gym."
+        },
+        {
+            "speaker": "AI",
+            "text": "Thanks for sharing! What is your weekday and weekend schedule like?"
+        },
+        {
+            "speaker": "USER",
+            "text": "I usually sleep at 1 AM and wake up at 8 AM for work. Weekends I sleep until 11."
+        },
+        {
+            "speaker": "AI",
+            "text": "Got it. And what creates the most friction? What distracts you the most from your goal?"
+        },
+        {
+            "speaker": "USER",
+            "text": "I just doomscroll on my phone in bed instead of getting up."
+        }
+    ],
+    "final_plan": {
+        "root_causes": [
+            "Inconsistent sleep schedule disrupting circadian rhythm.",
+            "High friction to start (gym clothes not ready).",
+            "Morning phone scrolling loop."
+        ],
+        "steps": [
+            "Set a 'no phone' rule for first 20 mins of waking.",
+            "Prepare gym bag and clothes the night before.",
+            "Use the '5 Second Rule' to get out of bed immediately."
+        ],
+        "timeline": {
+            "day_1_to_3": "Focus solely on waking up at 7am, even if you don't go to gym.",
+            "day_4_to_7": "Add putting on gym clothes immediately after waking.",
+            "week_2": "Go to gym for just 15 mins (low pressure).",
+            "week_3_to_4": "Build up to full standard workout routine."
+        },
+        "psychology_tip": "Action creates motivation, not the other way around. Don't wait to 'feel' like going.",
+        "action_plan_24h": [
+            "Tonight: Pack bag, phone charger away from bed.",
+            "Tomorrow 7:00 AM: Alarm rings, stand up immediately.",
+            "Tomorrow 7:15 AM: Drink water, shoes on, out the door."
+        ]
+    }
+}

@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<!-- index.html — Dynamic Life Breakdown Assistant -->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Life Breakdown Assistant</title>
+    <style>
+        /* Reusing previous clean styles */
+        :root {
+            --primary-color: #4a90e2;
+            --bg-color: #f5f7fa;
+            --chat-bg-user: #4a90e2;
+            --chat-bg-ai: #ffffff;
+            --heading-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-color);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        header {
+            margin-top: 40px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #app-container {
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 500px;
+            /* Reduced height to make room for plan */
+        }
+
+        #chat-window {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.ai {
+            align-self: flex-start;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            align-items: flex-end;
+        }
+
+        .bubble {
+            padding: 12px 18px;
+            border-radius: 18px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .ai .bubble {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-top-left-radius: 4px;
+        }
+
+        .user .bubble {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .speaker-label {
+            font-size: 0.8em;
+            color: #999;
+            margin-bottom: 4px;
+            margin-left: 4px;
+        }
+
+        #input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:disabled {
+            background: #ccc;
+        }
+
+        /* PLAN DISPLAY STYLES - Matching User Image */
+        #plan-display {
+            display: none;
+            width: 90%;
+            max-width: 800px;
+            background: #fff;
+            padding: 40px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .plan-section {
+            margin-bottom: 25px;
+        }
+
+        .plan-title {
+            font-size: 1.5em;
+            font-weight: 800;
+            color: black;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+        }
+
+        ul.plan-list {
+            list-style-type: disc;
+            padding-left: 20px;
+            margin: 0;
+        }
+
+        ul.plan-list li {
+            margin-bottom: 5px;
+            font-size: 1.05em;
+            line-height: 1.4;
+        }
+
+        .grid-row {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 10px;
+            margin-bottom: 5px;
+            font-size: 1.05em;
+        }
+
+        .grid-label {
+            font-weight: normal;
+            /* As per image, labels aren't strictly bold, but the value is text */
+            color: #333;
+        }
+
+        .psych-box {
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Life Breakdown Assistant</h1>
+        <div class="subtitle">I can help plan absolutely anything.</div>
+    </header>
+
+    <div id="app-container">
+        <div id="chat-window"></div>
+        <div id="input-area">
+            <input type="text" id="user-input" placeholder="Type your problem here..." autocomplete="off">
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <!-- Beautiful Plan Display -->
+    <div id="plan-display">
+        <!-- Content injected via JS -->
+    </div>
+
+    <script>
+        const chatWindow = document.getElementById('chat-window');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const planDisplay = document.getElementById('plan-display');
+
+        let history = [];
+
+        // Initial Greeting
+        addMessage('AI', "Hi! Tell me what you want to achieve, and I'll build a plan.");
+
+        function addMessage(role, text) {
+            history.push({ role: role.toLowerCase(), content: text });
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${role.toLowerCase()}`;
+
+            const label = document.createElement('div');
+            label.className = 'speaker-label';
+            label.textContent = role === 'AI' ? 'Assistant' : 'You';
+
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.textContent = text;
+
+            msgDiv.appendChild(label);
+            msgDiv.appendChild(bubble);
+            chatWindow.appendChild(msgDiv);
+            chatWindow.scrollTop = chatWindow.scrollHeight;
+        }
+
+        function renderPlan(plan) {
+            let html = '';
+
+            // Root Causes
+            html += `<div class="plan-section">
+                <div class="plan-title">Root causes</div>
+                <ul class="plan-list">
+                    ${plan.root_causes.map(c => `<li>${c}</li>`).join('')}
+                </ul>
+            </div>`;
+
+            // Steps
+            html += `<div class="plan-section">
+                <div class="plan-title">Steps</div>
+                <ul class="plan-list">
+                    ${plan.steps.map(s => `<li>${s}</li>`).join('')}
+                </ul>
+            </div>`;
+
+            // Timeline
+            html += `<div class="plan-section">
+                <div class="plan-title">Timeline</div>
+                <div class="grid-row"><div class="grid-label">day 1</div><div>${plan.timeline.day_1}</div></div>
+                <div class="grid-row"><div class="grid-label">day 2</div><div>${plan.timeline.day_2}</div></div>
+                <div class="grid-row"><div class="grid-label">week 1</div><div>${plan.timeline.week_1}</div></div>
+            </div>`;
+
+            // Psychology Tip
+            html += `<div class="plan-section">
+                <div class="plan-title">Psychology tip</div>
+                <div class="psych-box">${plan.psychology_tip}</div>
+            </div>`;
+
+            // Action Plan 24h
+            html += `<div class="plan-section">
+                <div class="plan-title">Action plan 24h</div>
+                <div class="grid-row"><div class="grid-label">now</div><div>${plan.action_plan_24h.now}</div></div>
+                <div class="grid-row"><div class="grid-label">tonight</div><div>${plan.action_plan_24h.tonight}</div></div>
+                <div class="grid-row"><div class="grid-label">tomorrow</div><div>${plan.action_plan_24h.tomorrow}</div></div>
+            </div>`;
+
+            planDisplay.innerHTML = html;
+            planDisplay.style.display = 'block';
+            planDisplay.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function handleUserMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            addMessage('USER', text);
+            userInput.value = '';
+
+            userInput.disabled = true;
+            sendBtn.textContent = "Thinking...";
+            const originalColor = sendBtn.style.backgroundColor;
+            sendBtn.style.backgroundColor = "#95a5a6";
+
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ conversation_history: history })
+                });
+
+                const data = await response.json();
+
+                if (data.type === 'question') {
+                    addMessage('AI', data.text);
+                } else if (data.type === 'plan') {
+                    addMessage('AI', "Here is your custom breakdown:");
+                    renderPlan(data.plan);
+                    sendBtn.textContent = "Done";
+                }
+
+            } catch (err) {
+                console.error(err);
+                addMessage('AI', "Connection Error.");
+            } finally {
+                userInput.disabled = false;
+                userInput.focus();
+                if (sendBtn.textContent !== "Done") sendBtn.textContent = "Send";
+                sendBtn.style.backgroundColor = originalColor;
+            }
+        }
+
+        sendBtn.addEventListener('click', handleUserMessage);
+        userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleUserMessage(); });
+    </script>
+</body>
+
+</html>
