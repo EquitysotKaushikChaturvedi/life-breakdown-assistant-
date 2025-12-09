@@ -1,5 +1,4 @@
 # app.py — Life Breakdown Assistant Backend
-# Author: Kaushik Chaturvedi
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse

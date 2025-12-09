@@ -1,5 +1,4 @@
 # model.py — AI Logic Layer
-# Author: Kaushik Chaturvedi
 # Handles RAG (Retrieval) and Generative Inference
 # Encapsulates:
 # 1. RAG-lite Knowledge Base (Gold Standard Templates)

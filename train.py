@@ -1,5 +1,4 @@
 # train.py — Fine-Tuning Script for Life Breakdown Assistant
-# Author: Kaushik Chaturvedi
 
 import sys
 from datasets import load_dataset

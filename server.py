@@ -1,5 +1,4 @@
 # server.py — Robust Life Breakdown AI V4
-# Author: Kaushik Chaturvedi
 # Includes advanced error handling and knowledge base integration
 
 from fastapi import FastAPI

@@ -1,5 +1,4 @@
 # knowledge_base.py
-# Author: Kaushik Chaturvedi
 # "Gold Standard" Templates to ground the AI.
 
 TOPIC_TEMPLATES = {

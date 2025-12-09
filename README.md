@@ -1,5 +1,4 @@
 # Life Breakdown Assistant (Backend)
-**Created by: Kaushik Chaturvedi**
 
 ## 1. Project Overview
 This project is an advanced AI-powered assistant designed to break down complex life problems into manageable, actionable steps. It utilizes a hybrid approach combining a static **Expert Knowledge Base** for reliability and a **Generative AI Model** (`flan-t5-base`) for flexible reasoning.
