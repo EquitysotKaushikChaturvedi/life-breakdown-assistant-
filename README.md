@@ -56,7 +56,9 @@ The core philosophy is **"Decomposition"**.
 4.  **Inference (Fallback)**: If no template is found, the AI generates the plan field-by-field (Root Causes, then Steps, then Timeline) using discrete prompts to maintain focus.
 5.  **Response**: Validated JSON is returned to the client.
 
-## 7. Backend Screenshot
-Here is the Swagger UI (`/docs`) showing the active API endpoints:
+## 7. Project Screenshots
+### 1. Frontend Interface
+![Frontend Interface](screenshots/frontend_ui.png)
 
-![Backend API Swagger UI](/C:/Users/Delll/.gemini/antigravity/brain/1ca45b73-8839-4f4e-b328-d90ffb9ab1e9/backend_swagger_docs_1765275884655.png)
+### 2. Backend API Docs (Swagger UI)
+![Backend API Swagger UI](screenshots/swagger_ui.png)
